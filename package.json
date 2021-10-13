@@ -1,0 +1,20 @@
+{
+  "name": "clean-architecture-typescript",
+  "version": "1.0.0",
+  "description": "> API com Clean Architecture, TDD, BDD e TypeScript </br> > Typescript, TDD e Clean Architecture (Mango) - https://youtube.com/playlist?list=PL9aKtVrF05DxIrtD3CuXGnzq8Q0IZ-t8J",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/will-cesar/clean-architecture-typescript.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/will-cesar/clean-architecture-typescript/issues"
+  },
+  "homepage": "https://github.com/will-cesar/clean-architecture-typescript#readme"
+}
