@@ -1,8 +1,9 @@
 # Clean Architecture, TDD, BDD e TypeScript
 
+> Typescript, TDD e Clean Architecture - Canal `Mango` 
+
 ```
-Typescript, TDD e Clean Architecture (Mango)
-Link: https://youtube.com/playlist?list=PL9aKtVrF05DxIrtD3CuXGnzq8Q0IZ-t8J
+https://youtube.com/playlist?list=PL9aKtVrF05DxIrtD3CuXGnzq8Q0IZ-t8J
 ```
 > ## Sobre
 
