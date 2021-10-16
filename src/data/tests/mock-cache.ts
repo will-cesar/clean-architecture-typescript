@@ -3,21 +3,23 @@ import { CacheStore } from "@/data/protocols/cache";
 
 export class CacheStoreSpy implements CacheStore {
   actions: CacheStoreSpy.Action[] = [];
-  deleteCallsCount = 0;
-  insertCallsCount = 0;
   deleteKey: string;
   insertKey: string;
+  fetchKey: string;
   insertValues: SavePurchases.Params[] = [];
+
+  fetch(key: string): void {
+    this.actions.push(CacheStoreSpy.Action.fetch);
+    this.fetchKey = key;
+  }
 
   delete(key: string): void {
     this.actions.push(CacheStoreSpy.Action.delete);
-    this.deleteCallsCount++;
     this.deleteKey = key;
   }
 
   insert(key: string, value: any): void {
     this.actions.push(CacheStoreSpy.Action.insert);
-    this.insertCallsCount++;
     this.insertKey = key;
     this.insertValues = value;
   }
@@ -58,5 +60,6 @@ export namespace CacheStoreSpy {
   export enum Action {
     delete,
     insert,
+    fetch,
   }
 }
