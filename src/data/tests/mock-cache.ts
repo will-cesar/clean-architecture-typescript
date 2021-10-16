@@ -22,6 +22,11 @@ export class CacheStoreSpy implements CacheStore {
     this.insertValues = value;
   }
 
+  replace(key: string, value: any): void {
+    this.delete(key);
+    this.insert(key, value);
+  }
+
   simulateDeleteError(): void {
     /**
      * Função para simular o erro do método delete.
