@@ -45,16 +45,16 @@ describe("LocalSavePurchases", () => {
      * - Por isso foi criado um array em "messages", onde ele registra quando cada método
      * é chamado
      *
-     * - Valida se o método delete foi chamado
-     * - Valida se o método insert foi chamado
-     * - Valida se a key do insert é "purchases"
-     * - Valida se os novos valores foram inseridos
+     * - Valida se os métodos foram chamados da forma e ordem correta
+     * - Valida se a key do insert e delete é "purchases"
+     * - Valida se o timestamp está correto e os valores foram inseridos no cache
+     * - valida se a promise não retorna uma exceção
      */
 
     const timestamp = new Date();
     const { cacheStore, sut } = makeSut(timestamp);
     const purchases = mockPurchases();
-    await sut.save(purchases);
+    const promise = sut.save(purchases);
     expect(cacheStore.messages).toEqual([
       CacheStoreSpy.Message.delete,
       CacheStoreSpy.Message.insert,
@@ -65,6 +65,7 @@ describe("LocalSavePurchases", () => {
       timestamp,
       value: purchases,
     });
+    await expect(promise).resolves.toBeFalsy();
   });
 
   test("Should throw if insert throws", async () => {
