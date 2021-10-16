@@ -23,24 +23,6 @@ describe("LocalSavePurchases", () => {
     expect(cacheStore.messages).toEqual([]);
   });
 
-  test("Should delete old cache on sut.save", async () => {
-    /**
-     * Teste para deletar o Cache antigo quando salvar os novos dados
-     *
-     * - Se espera que a ordem dos métodos seja primeiro de deletar e logo após inserir
-     * - Por isso foi criado um array em "messages", onde ele registra quando cada método
-     * é chamado
-     */
-
-    const { cacheStore, sut } = makeSut();
-    await sut.save(mockPurchases());
-    expect(cacheStore.messages).toEqual([
-      CacheStoreSpy.Message.delete,
-      CacheStoreSpy.Message.insert,
-    ]);
-    expect(cacheStore.deleteKey).toBe("purchases");
-  });
-
   test("Should not insert new Cache if delete fails", async () => {
     /**
      * Teste para garantir que o método insert não vai ser chamado
@@ -59,6 +41,10 @@ describe("LocalSavePurchases", () => {
      * Teste para ter certeza quer um novo cache foi inserido caso
      * o delete tenha funcionado com sucesso.
      *
+     * - Se espera que a ordem dos métodos seja primeiro de deletar e logo após inserir
+     * - Por isso foi criado um array em "messages", onde ele registra quando cada método
+     * é chamado
+     *
      * - Valida se o método delete foi chamado
      * - Valida se o método insert foi chamado
      * - Valida se a key do insert é "purchases"
@@ -72,6 +58,7 @@ describe("LocalSavePurchases", () => {
       CacheStoreSpy.Message.delete,
       CacheStoreSpy.Message.insert,
     ]);
+    expect(cacheStore.deleteKey).toBe("purchases");
     expect(cacheStore.insertKey).toBe("purchases");
     expect(cacheStore.insertValues).toBe(purchases);
   });
