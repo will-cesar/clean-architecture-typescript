@@ -20,7 +20,7 @@ describe("LocalSavePurchases", () => {
 
   test("Should not delete or insert cache on sut.init", () => {
     const { cacheStore } = makeSut();
-    expect(cacheStore.messages).toEqual([]);
+    expect(cacheStore.actions).toEqual([]);
   });
 
   test("Should not insert new Cache if delete fails", async () => {
@@ -32,7 +32,7 @@ describe("LocalSavePurchases", () => {
     const { cacheStore, sut } = makeSut();
     cacheStore.simulateDeleteError();
     const promise = sut.save(mockPurchases());
-    expect(cacheStore.messages).toEqual([CacheStoreSpy.Message.delete]);
+    expect(cacheStore.actions).toEqual([CacheStoreSpy.Action.delete]);
     await expect(promise).rejects.toThrow();
   });
 
@@ -42,7 +42,7 @@ describe("LocalSavePurchases", () => {
      * o delete tenha funcionado com sucesso.
      *
      * - Se espera que a ordem dos métodos seja primeiro de deletar e logo após inserir
-     * - Por isso foi criado um array em "messages", onde ele registra quando cada método
+     * - Por isso foi criado um array em .actions", onde ele registra quando cada método
      * é chamado
      *
      * - Valida se os métodos foram chamados da forma e ordem correta
@@ -55,9 +55,9 @@ describe("LocalSavePurchases", () => {
     const { cacheStore, sut } = makeSut(timestamp);
     const purchases = mockPurchases();
     const promise = sut.save(purchases);
-    expect(cacheStore.messages).toEqual([
-      CacheStoreSpy.Message.delete,
-      CacheStoreSpy.Message.insert,
+    expect(cacheStore.actions).toEqual([
+      CacheStoreSpy.Action.delete,
+      CacheStoreSpy.Action.insert,
     ]);
     expect(cacheStore.deleteKey).toBe("purchases");
     expect(cacheStore.insertKey).toBe("purchases");
@@ -76,9 +76,9 @@ describe("LocalSavePurchases", () => {
     const { cacheStore, sut } = makeSut();
     cacheStore.simulateInsertError();
     const promise = sut.save(mockPurchases());
-    expect(cacheStore.messages).toEqual([
-      CacheStoreSpy.Message.delete,
-      CacheStoreSpy.Message.insert,
+    expect(cacheStore.actions).toEqual([
+      CacheStoreSpy.Action.delete,
+      CacheStoreSpy.Action.insert,
     ]);
     await expect(promise).rejects.toThrow();
   });
