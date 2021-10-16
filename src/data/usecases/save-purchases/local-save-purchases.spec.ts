@@ -3,6 +3,7 @@ import { LocalSavePurchases } from "@/data/usecases";
 
 class CacheStoreSpy implements CacheStore {
   deleteCallsCount = 0;
+  insertCallsCount = 0;
   key: string;
 
   delete(key: string): void {
@@ -10,6 +11,7 @@ class CacheStoreSpy implements CacheStore {
     this.key = key;
   }
 }
+
 type SutTypes = {
   sut: LocalSavePurchases;
   cacheStore: CacheStoreSpy;
@@ -33,5 +35,23 @@ describe("LocalSavePurchases", () => {
     await sut.save();
     expect(cacheStore.deleteCallsCount).toBe(1);
     expect(cacheStore.key).toBe("purchases");
+  });
+
+  test("Should not insert new Cache if delete fails", async () => {
+    /**
+      Teste para garantir que o método insert não vai ser chamado
+      caso haja um erro ao deletar o cache
+
+      - o método "jest.spyOn" basicamente cria uma função mockada fake
+      - nesse caso essa função retorna um erro proposital sempre
+    */
+
+    const { cacheStore, sut } = makeSut();
+    jest.spyOn(cacheStore, "delete").mockImplementationOnce(() => {
+      throw new Error();
+    });
+    const promise = sut.save();
+    expect(cacheStore.insertCallsCount).toBe(0);
+    expect(promise).rejects.toThrow();
   });
 });
