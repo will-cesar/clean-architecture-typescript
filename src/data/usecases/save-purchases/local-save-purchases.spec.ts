@@ -19,6 +19,18 @@ class CacheStoreSpy implements CacheStore {
     this.insertKey = key;
     this.insertValues = value;
   }
+
+  simulateDeleteError(): void {
+    /**
+     * Função para simular o erro do método delete.
+     *
+     * O método "jest.spyOn" basicamente cria uma função mockada fake.
+     * Nesse caso essa função retorna um erro proposital sempre.
+     */
+    jest.spyOn(CacheStoreSpy.prototype, "delete").mockImplementationOnce(() => {
+      throw new Error();
+    });
+  }
 }
 
 const mockPurchases = (): Array<SavePurchases.Params> => [
@@ -63,16 +75,10 @@ describe("LocalSavePurchases", () => {
     /**
      * Teste para garantir que o método insert não vai ser chamado
      * caso haja um erro ao deletar o cache
-     *
-     * O método "jest.spyOn" basicamente cria uma função mockada fake
-     *
-     * Nesse caso essa função retorna um erro proposital sempre.
      */
 
     const { cacheStore, sut } = makeSut();
-    jest.spyOn(cacheStore, "delete").mockImplementationOnce(() => {
-      throw new Error();
-    });
+    cacheStore.simulateDeleteError();
     const promise = sut.save(mockPurchases());
     expect(cacheStore.insertCallsCount).toBe(0);
     expect(promise).rejects.toThrow();
