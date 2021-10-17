@@ -13,11 +13,6 @@ const makeSut = (timestamp = new Date()): SutTypes => {
 };
 
 describe("LocalLoadPurchases", () => {
-  /**
-   * Teste para garantir que não será inserido ou deletado nenhum
-   * cache sem chamar os respectivos métodos
-   */
-
   test("Should not delete or insert cache on sut.init", () => {
     const { cacheStore } = makeSut();
     expect(cacheStore.actions).toEqual([]);
