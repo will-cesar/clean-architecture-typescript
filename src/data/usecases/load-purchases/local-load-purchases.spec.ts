@@ -49,16 +49,50 @@ describe("LocalLoadPurchases", () => {
     /**
      * Teste para garantir que retorne uma lista de purchases caso o cache tenha
      * menos de 3 dias de duração
+     *
+     * - é passado um timestamp no limite do tempo máximo permitido, ou seja,
+     * 2 dias, 23 horas e 59 segundos.
+     * - primeiro é criado uma nova data com a data atual
+     * - depois subtrai 3 dias da data atual
+     * - logo em seguida adiciona 1 segundo na data, assim formando a data limite esperada
      */
 
-    const timestamp = new Date();
-    const { cacheStore, sut } = makeSut(timestamp);
+    const currentDate = new Date();
+    const timestamp = new Date(currentDate);
+    timestamp.setDate(timestamp.getDate() - 3);
+    timestamp.setSeconds(timestamp.getSeconds() + 1);
+    const { cacheStore, sut } = makeSut(currentDate);
     cacheStore.fetchResult = {
       timestamp,
       value: mockPurchases(),
     };
     const purchases = await sut.loadAll();
     expect(cacheStore.actions).toEqual([CacheStoreSpy.Action.fetch]);
+    expect(cacheStore.fetchKey).toBe("purchases");
     expect(purchases).toEqual(cacheStore.fetchResult.value);
+  });
+
+  test("Should return an empty list if cache is more than 3 days old", async () => {
+    /**
+     * Teste para garantir que retorne uma lista vazia caso o cache tenha mais de 3 dias
+     */
+
+    const currentDate = new Date();
+    const timestamp = new Date(currentDate);
+    timestamp.setDate(timestamp.getDate() - 3);
+    timestamp.setSeconds(timestamp.getSeconds() - 1);
+    const { cacheStore, sut } = makeSut(currentDate);
+    cacheStore.fetchResult = {
+      timestamp,
+      value: mockPurchases(),
+    };
+    const purchases = await sut.loadAll();
+    expect(cacheStore.actions).toEqual([
+      CacheStoreSpy.Action.fetch,
+      CacheStoreSpy.Action.delete,
+    ]);
+    expect(cacheStore.fetchKey).toBe("purchases");
+    expect(cacheStore.deleteKey).toBe("purchases");
+    expect(purchases).toEqual([]);
   });
 });
