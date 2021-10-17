@@ -20,6 +20,7 @@ describe("LocalLoadPurchases", () => {
 
   test("Should not delete or insert cache on sut.init", () => {
     const { cacheStore } = makeSut();
+
     expect(cacheStore.actions).toEqual([]);
   });
 
@@ -37,6 +38,7 @@ describe("LocalLoadPurchases", () => {
     const { cacheStore, sut } = makeSut();
     cacheStore.simulateFetchError();
     const purchases = await sut.loadAll();
+
     expect(cacheStore.actions).toEqual([
       CacheStoreSpy.Action.fetch,
       CacheStoreSpy.Action.delete,
@@ -61,12 +63,14 @@ describe("LocalLoadPurchases", () => {
     const timestamp = new Date(currentDate);
     timestamp.setDate(timestamp.getDate() - 3);
     timestamp.setSeconds(timestamp.getSeconds() + 1);
+
     const { cacheStore, sut } = makeSut(currentDate);
     cacheStore.fetchResult = {
       timestamp,
       value: mockPurchases(),
     };
     const purchases = await sut.loadAll();
+
     expect(cacheStore.actions).toEqual([CacheStoreSpy.Action.fetch]);
     expect(cacheStore.fetchKey).toBe("purchases");
     expect(purchases).toEqual(cacheStore.fetchResult.value);
@@ -81,12 +85,14 @@ describe("LocalLoadPurchases", () => {
     const timestamp = new Date(currentDate);
     timestamp.setDate(timestamp.getDate() - 3);
     timestamp.setSeconds(timestamp.getSeconds() - 1);
+
     const { cacheStore, sut } = makeSut(currentDate);
     cacheStore.fetchResult = {
       timestamp,
       value: mockPurchases(),
     };
     const purchases = await sut.loadAll();
+
     expect(cacheStore.actions).toEqual([
       CacheStoreSpy.Action.fetch,
       CacheStoreSpy.Action.delete,
@@ -105,18 +111,42 @@ describe("LocalLoadPurchases", () => {
     const currentDate = new Date();
     const timestamp = new Date(currentDate);
     timestamp.setDate(timestamp.getDate() - 3);
+
     const { cacheStore, sut } = makeSut(currentDate);
     cacheStore.fetchResult = {
       timestamp,
       value: mockPurchases(),
     };
     const purchases = await sut.loadAll();
+
     expect(cacheStore.actions).toEqual([
       CacheStoreSpy.Action.fetch,
       CacheStoreSpy.Action.delete,
     ]);
     expect(cacheStore.fetchKey).toBe("purchases");
     expect(cacheStore.deleteKey).toBe("purchases");
+    expect(purchases).toEqual([]);
+  });
+
+  test("Should return an empty list if cache is empty", async () => {
+    /**
+     * Teste para garantir que retorne uma lista vazia caso o cache seja vazio
+     */
+
+    const currentDate = new Date();
+    const timestamp = new Date(currentDate);
+    timestamp.setDate(timestamp.getDate() - 3);
+    timestamp.setSeconds(timestamp.getSeconds() + 1);
+
+    const { cacheStore, sut } = makeSut(currentDate);
+    cacheStore.fetchResult = {
+      timestamp,
+      value: [],
+    };
+    const purchases = await sut.loadAll();
+
+    expect(cacheStore.actions).toEqual([CacheStoreSpy.Action.fetch]);
+    expect(cacheStore.fetchKey).toBe("purchases");
     expect(purchases).toEqual([]);
   });
 });
