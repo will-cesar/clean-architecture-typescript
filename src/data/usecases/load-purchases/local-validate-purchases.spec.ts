@@ -18,4 +18,18 @@ describe("LocalLoadPurchases", () => {
 
     expect(cacheStore.actions).toEqual([]);
   });
+
+  test("Should delete cache if load fails", () => {
+    /**
+     * Teste para garantir que será deletado o cache caso o load falhe
+     */
+    const { cacheStore, sut } = makeSut();
+    cacheStore.simulateFetchError();
+    sut.validate();
+    expect(cacheStore.actions).toEqual([
+      CacheStoreSpy.Action.fetch,
+      CacheStoreSpy.Action.delete,
+    ]);
+    expect(cacheStore.deleteKey).toBe("purchases");
+  });
 });
