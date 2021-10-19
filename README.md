@@ -9,7 +9,7 @@ https://youtube.com/playlist?list=PL9aKtVrF05DxIrtD3CuXGnzq8Q0IZ-t8J
 
 - Projeto com o objetivo de ter o controle do cache de informações para o cliente
 - Projeto desenvolvido para o `client-side` utilizando a metodologia de `BDD` e `TDD` 
-- Os requisitos para o sistema se encontram na pasta `"requirements"`
+- Os requisitos para o sistema se encontram na pasta `requirements`
 - Aplicação desacoplada utilizando o Clean Architecture
 - Utilização do Jest, um framework de testes em javascript, para os testes na aplicação
 
